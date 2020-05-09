@@ -6,20 +6,44 @@ from datetime import datetime
 from datetime import timedelta
 from threading import Timer
 from subprocess import call
+import multiprocessing
 
-#---startConferenceChecker---
+#import other codes
+import canvas
+import googleClassroom
+
+#---startConferenceCheckerOnOtherProcess---
 def thread_second():
+	print('StartingOTherThread')
 	call(["python3", "conferenceChecker.py"])
+	print('Ooga booga')
 processThread = threading.Thread(target=thread_second)
 processThread.start()
 
+#---addAssignmentsToTODO---
+def addAssignment():
+	print('Doin YOur MOm');
+
 #---checkForAssingments---
 def check():
-	print('Im Looking for Assingments')
+	print('Checking For Assignments')
+	canvasCheck = []#checkCanvas()
+	googleCheck = []#checkGoogle()
 
-schedule.every(10).minutes.do(check)
+	if not googleCheck:
+		print('No New Assignments From Classroom')
+	else:
+		for x in googleCheck:
+			addAssignment(googleCheck[x])
+
+	if not canvasCheck:
+		print('No New Assignments From Canvas')
+	else:
+		for x in canvasCheck:
+			addAssignment(canvasCheck[x])
+
+schedule.every(1).minutes.do(check)
 
 while True:
-	time = datetime.now()
-	parsedTime = (time.strftime("%H:%M:%S"))
-	if 
+	schedule.run_pending()
+	time.sleep(1)
